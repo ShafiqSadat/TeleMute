@@ -89,7 +89,7 @@ function tdcli_update_callback(data)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>PONG</b>', 1, 'html')
       end
       if input:match("^[#!/][Ii][Dd]$") then
-	  tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>SuperGroup ID : </b><code>'..string.sub(chat_id, 5,14)..'</code>\n<b>User ID : </b><code>'..user_id..'</code>\n<b>Channel : </b>@MuteTeam', 1, 'html')
+	  tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>SuperGroup 🆔 : </b><code>'..string.sub(chat_id, 5,14)..'</code>\n<b>Your 🆔 : </b><code>'..user_id..'</code>\n<b> Our Channel : </b>@AFBOTS', 1, 'html')
       end
 
       if input:match("^[#!/][Pp][Ii][Nn]$") and reply_id then
@@ -107,7 +107,7 @@ function tdcli_update_callback(data)
 ---------------------------------------------------------------------------------------------------------------------------------
 		if input:match("^[#!/][Aa]dd$") and is_sudo(msg) then
 		 redis:sadd('groups',chat_id)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Group Hadd Been Added!*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* ✅ Super Group Has Been Added!*', 1, 'md')
 		end
 		-------------------------------------------------------------------------------------------------------------------------------------------
 		if input:match("^[#!/][Rr]em$") and is_sudo(msg) then
