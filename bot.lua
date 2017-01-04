@@ -6,8 +6,8 @@ package.cpath = package.cpath .. ';.luarocks/lib/lua/5.2/?.so'
 tdcli = dofile('tdcli.lua')
 redis = (loadfile "./libs/redis.lua")()
 sudo_users = {
-  113566842,
   65761134,
+  113566842,
 	0
 }
 
@@ -89,53 +89,54 @@ function tdcli_update_callback(data)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>PONG</b>', 1, 'html')
       end
       if input:match("^[#!/][Ii][Dd]$") then
-	  tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>SuperGroup 🆔 : </b><code>'..string.sub(chat_id, 5,14)..'</code>\n<b>Your 🆔 : </b><code>'..user_id..'</code>\n<b>Our Channel : </b>@AFBOTS', 1, 'html')
+	  tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>SuperGroup ID : </b><code>'..string.sub(chat_id, 5,14)..'</code>\n<b>User ID : </b><code>'..user_id..'</code>\n<b>Channel : </b>@MuteTeam', 1, 'html')
       end
 
-      if input:match("^[#!/][Pp][Ii][Nn]") and reply_id then
+      if input:match("^[#!/][Pp][Ii][Nn]$") and reply_id then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>Message Pinned</b>', 1, 'html')
         tdcli.pinChannelMessage(chat_id, reply_id, 1)
       end
 
-      if input:match("^[#!/][Uu][Nn][Pp][Ii][Nn]") and reply_id then
+      if input:match("^[#!/][Uu][Nn][Pp][Ii][Nn]$") and reply_id then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>Message UnPinned</b>', 1, 'html')
         tdcli.unpinChannelMessage(chat_id, reply_id, 1)
       end
+	  
 
       		-----------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------
 		if input:match("^[#!/][Aa]dd$") and is_sudo(msg) then
 		 redis:sadd('groups',chat_id)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* ✅ Super Group Has Been Added!*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Group Hadd Been Added!*', 1, 'md')
 		end
 		-------------------------------------------------------------------------------------------------------------------------------------------
 		if input:match("^[#!/][Rr]em$") and is_sudo(msg) then
 		redis:srem('groups',chat_id)
-		 tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🚫 Super Group Has Been Removed!*', 1, 'md')
+		 tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Group Has Been Removed!*', 1, 'md')
 		 end
 		 -----------------------------------------------------------------------------------------------------------------------------------------------
 			
 			--lock links
 groups = redis:sismember('groups',chat_id)
-      if input:match("^lock links$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]lock links$") and is_sudo(msg) and groups then
        if redis:get('lock_linkstg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Links is already Locked_', 1, 'md')
        else 
         redis:set('lock_linkstg:'..chat_id, true)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '_لینک قفل شد_', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Links Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^unlock links$")  and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock links$")  and is_sudo(msg) and groups then
        if not redis:get('lock_linkstg:'..chat_id) then
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 link Posting is already UnLocked', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 links is already UnLocked', 1, 'md')
        else
          redis:del('lock_linkstg:'..chat_id)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nlink Posting Has Been UnLocked', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nlinks Has Been UnLocked', 1, 'md')
       end
       end
 	  --lock username
 	  groups = redis:sismember('groups',chat_id)
-	  if input:match("^lock username$") and is_sudo(msg) and groups then
+	  if input:match("^[#!/]lock username$") and is_sudo(msg) and groups then
        if redis:get('usernametg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Username is already Locked', 1, 'md')
        else 
@@ -143,7 +144,7 @@ groups = redis:sismember('groups',chat_id)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nUsername Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^unlock username$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock username$") and is_sudo(msg) and groups then
        if not redis:get('usernametg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Username is already UnLocked', 1, 'md')
        else
@@ -153,7 +154,7 @@ groups = redis:sismember('groups',chat_id)
       end
 	  --lock tag
 	  groups = redis:sismember('groups',chat_id)
-	  if input:match("^lock tag$") and is_sudo(msg) and groups then
+	  if input:match("^[#!/]lock tag$") and is_sudo(msg) and groups then
        if redis:get('tagtg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Tag is already Locked', 1, 'md')
        else 
@@ -161,7 +162,7 @@ groups = redis:sismember('groups',chat_id)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nTag Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^بازکردن تگ$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock tag$") and is_sudo(msg) and groups then
        if not redis:get('tagtg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Tag is already Not Locked', 1, 'md')
        else
@@ -171,15 +172,15 @@ groups = redis:sismember('groups',chat_id)
       end
 	  --lock forward
 	  groups = redis:sismember('groups',chat_id)
-	  if input:match("^lock forward$") and is_sudo(msg) and groups then
+	  if input:match("^[#!/]lock forward$") and is_sudo(msg) and groups then
        if redis:get('forwardtg:'..chat_id) then
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Forward is already Not Locked', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Forward is already Locked', 1, 'md')
        else 
         redis:set('forwardtg:'..chat_id, true)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nForward Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^unlock forward$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock forward$") and is_sudo(msg) and groups then
        if not redis:get('forwardtg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Forward is already Not Locked', 1, 'md')
        else
@@ -189,7 +190,7 @@ groups = redis:sismember('groups',chat_id)
       end
 	  --arabic/persian
 	  groups = redis:sismember('groups',chat_id)
-	  if input:match("^lock arabic$") and is_sudo(msg) and groups then
+	  if input:match("^[#!/]lock arabic$") and is_sudo(msg) and groups then
        if redis:get('arabictg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Persian/Arabic is already Locked', 1, 'md')
        else 
@@ -197,7 +198,7 @@ groups = redis:sismember('groups',chat_id)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nPersian/Arabic Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^unlock arabic$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock arabic$") and is_sudo(msg) and groups then
        if not redis:get('arabictg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Persian/Arabic is already Not Locked', 1, 'md')
        else
@@ -207,7 +208,7 @@ groups = redis:sismember('groups',chat_id)
       end
 	 ---english
 	 groups = redis:sismember('groups',chat_id)
-	  if input:match("^lock english$") and is_sudo(msg) and groups then
+	  if input:match("^[#!/]lock english$") and is_sudo(msg) and groups then
        if redis:get('engtg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 English is already Locked', 1, 'md')
        else 
@@ -215,7 +216,7 @@ groups = redis:sismember('groups',chat_id)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nEnglish Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^بازکردن انگلیسی$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock english$") and is_sudo(msg) and groups then
        if not redis:get('engtg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 English is already Not Locked', 1, 'md')
        else
@@ -225,7 +226,7 @@ groups = redis:sismember('groups',chat_id)
       end
 	  --lock foshtg
 	  groups = redis:sismember('groups',chat_id)
-	  if input:match("^قفل فحش$") and is_sudo(msg) and groups then
+	  if input:match("^[#!/]lock fosh$") and is_sudo(msg) and groups then
        if redis:get('badwordtg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Fosh is already Locked', 1, 'md')
        else 
@@ -233,7 +234,7 @@ groups = redis:sismember('groups',chat_id)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nFosh Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^بازکردن فحش$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock fosh$") and is_sudo(msg) and groups then
        if not redis:get('badwordtg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Fosh is already Not Locked', 1, 'md')
        else
@@ -243,7 +244,7 @@ groups = redis:sismember('groups',chat_id)
       end
 	  --lock edit
 	  groups = redis:sismember('groups',chat_id)
-	  if input:match("^lock edit$") and is_sudo(msg) and groups then
+	  if input:match("^[#!/]lock edit$") and is_sudo(msg) and groups then
        if redis:get('edittg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Edit is already Locked', 1, 'md')
        else 
@@ -251,7 +252,7 @@ groups = redis:sismember('groups',chat_id)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nEdit Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^بازکردن ویرایش$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock edit$") and is_sudo(msg) and groups then
        if not redis:get('edittg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Edit is already Not Locked', 1, 'md')
        else
@@ -259,9 +260,26 @@ groups = redis:sismember('groups',chat_id)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nEdit Has Been UnLocked', 1, 'md')
       end
       end
+	  --- lock Caption
+	  if input:match("^[#!/]lock caption$") and is_sudo(msg) and groups then
+       if redis:get('captg:'..chat_id) then
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Caption is already Locked', 1, 'md')
+       else 
+        redis:set('captg:'..chat_id, true)
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nCaption Has Been Locked', 1, 'md')
+      end
+      end 
+      if input:match("^[#!/]unlock caption$") and is_sudo(msg) and groups then
+       if not redis:get('captg:'..chat_id) then
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Caption is already Not Locked', 1, 'md')
+       else
+         redis:del('captg:'..chat_id)
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nCaption Has Been UnLocked', 1, 'md')
+      end
+      end
 	  --lock emoji
 	  groups = redis:sismember('groups',chat_id)
-	  if input:match("^lock emoji") and is_sudo(msg) and groups then
+	  if input:match("^[#!/]lock emoji") and is_sudo(msg) and groups then
        if redis:get('emojitg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Emoji is already Locked', 1, 'md')
        else 
@@ -269,7 +287,7 @@ groups = redis:sismember('groups',chat_id)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nEmoji Has Been Locked', 1, 'md')
       end
       end 
-      if input:match("^unlock emoji$") and is_sudo(msg) and groups then
+      if input:match("^[#!/]unlock emoji$") and is_sudo(msg) and groups then
        if not redis:get('emojitg:'..chat_id) then
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 Emoji is already Not Locked', 1, 'md')
        else
@@ -299,83 +317,90 @@ groups = redis:sismember('groups',chat_id)
 	  -----------------------------------------------------------------------------------------------------------------
 local link = 'lock_linkstg:'..chat_id
 	 if redis:get(link) then
-	  link = "yes"
+	  link = "`Enable`"
 	  else 
-	  link = "no"
+	  link = "`Disable`"
 	 end
 	 
 	 local username = 'usernametg:'..chat_id
 	 if redis:get(username) then
-	  username = "yes"
+	  username = "`Enable`"
 	  else 
-	  username = "no"
+	  username = "`Disable`"
 	 end
 	 
 	 local tag = 'tagtg:'..chat_id
 	 if redis:get(tag) then
-	  tag = "yes"
+	  tag = "`Enable`"
 	  else 
-	  tag = "no"
+	  tag = "`Disable`"
 	 end
 	 
 	 local forward = 'forwardtg:'..chat_id
 	 if redis:get(forward) then
-	  forward = "yes"
+	  forward = "`Enable`"
 	  else 
-	  forward = "no"
+	  forward = "`Disable`"
 	 end
 	 
 	 local arabic = 'arabictg:'..chat_id
 	 if redis:get(arabic) then
-	  arabic = "yes"
+	  arabic = "`Enable`"
 	  else 
-	  arabic = "no"
+	  arabic = "`Disable`"
 	 end
 	 
 	 local eng = 'engtg:'..chat_id
 	 if redis:get(eng) then
-	  eng = "yes"
+	  eng = "`Enable`"
 	  else 
-	  eng = "no"
+	  eng = "`Disable`"
 	 end
 	 
 	 local badword = 'badwordtg:'..chat_id
 	 if redis:get(badword) then
-	  badword = "yes"
+	  badword = "`Enable`"
 	  else 
-	  badword = "no"
+	  badword = "`Disable`"
 	 end
 	 
 	 local edit = 'edittg:'..chat_id
 	 if redis:get(edit) then
-	  edit = "yes"
+	  edit = "`Enable`"
 	  else 
-	  edit = "no"
+	  edit = "`Disable`"
 	 end
 	 
 	 local emoji = 'emojitg:'..chat_id
 	 if redis:get(emoji) then
-	  emoji = "yes"
+	  emoji = "`Enable`"
 	  else 
-	  emoji = "no"
+	  emoji = "`Disable`"
+	 end
+	 
+	 local caption = 'captg:'..chat_id
+	 if redis:get(caption) then
+	  caption = "`Enable`"
+	  else 
+	  caption = "`Disable`"
 	 end
 	 ----------------------------
 		--muteall
 		groups = redis:sismember('groups',chat_id)
             if input:match("^[#!/][Mm]ute all$") and is_sudo(msg) and groups then
        if redis:get('mute_alltg:'..chat_id) then
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🔇 Mute All is already on*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute All is already on*', 1, 'md')
        else 
        redis:set('mute_alltg:'..chat_id, true)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🔇 Mute All has been enabled*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute All has been enabled*', 1, 'md')
       end
       end
       if input:match("^[#!/][Uu]nmute all$") and is_sudo(msg) and groups then
        if not redis:get('mute_alltg:'..chat_id) then
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🔊 Mute All is already disabled*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute All is already disabled*', 1, 'md')
        else 
          redis:del('mute_alltg:'..chat_id)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🔊 Mute All has been disabled*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute All has been disabled*', 1, 'md')
       end
       end	 
 
@@ -544,97 +569,98 @@ if input:match("^[#!/][Mm]ute sticker$") and is_sudo(msg) and groups then
 		--settings
 		local all = 'mute_alltg:'..chat_id
 	 if redis:get(all) then
-	  All = "yes"
+	  All = "`Mute`"
 	  else 
-	  All = "no"
+	  All = "`UnMute`"
 	 end
 	 
 	 local sticker = 'mute_stickertg:'..chat_id
 	 if redis:get(sticker) then
-	  sticker = "yes"
+	  sticker = "`Mute`"
 	  else 
-	  sticker = "no"
+	  sticker = "`UnMute`"
 	 end
 	 
 	 local gift = 'mute_gifttg:'..chat_id
 	 if redis:get(gift) then
-	  gift = "yes"
+	  gift = "`Mute`"
 	  else 
-	  gift = "no"
+	  gift = "`UnMute`"
 	 end
 	 
 	 local contact = 'mute_contacttg:'..chat_id
 	 if redis:get(contact) then
-	  contact = "yes"
+	  contact = "`Mute`"
 	  else 
-	  contact = "no"
+	  contact = "`UnMute`"
 	 end
 	 
 	 local photo = 'mute_phototg:'..chat_id
 	 if redis:get(photo) then
-	  photo = "yes"
+	  photo = "`Mute`"
 	  else 
-	  photo = "no"
+	  photo = "`UnMute`"
 	 end
 	 
 	 local audio = 'mute_audiotg:'..chat_id
 	 if redis:get(audio) then
-	  audio = "yes"
+	  audio = "`Mute`"
 	  else 
-	  audio = "no"
+	  audio = "`UnMute`"
 	 end
 	 
 	 local voice = 'mute_voicetg:'..chat_id
 	 if redis:get(voice) then
-	  voice = "yes"
+	  voice = "`Mute`"
 	  else 
-	  voice = "no"
+	  voice = "`UnMute`"
 	 end
 	 
 	 local video = 'mute_videotg:'..chat_id
 	 if redis:get(video) then
-	  video = "yes"
+	  video = "`Mute`"
 	  else 
-	  video = "no"
+	  video = "`UnMute`"
 	 end
 	 
 	 local document = 'mute_documenttg:'..chat_id
 	 if redis:get(document) then
-	  document = "yes"
+	  document = "`Mute`"
 	  else 
-	  document = "no"
+	  document = "`UnMute`"
 	 end
 	 
 	 local text1 = 'mute_texttg:'..chat_id
 	 if redis:get(text1) then
-	  text1 = "yes"
+	  text1 = "`Mute`"
 	  else 
-	  text1 = "no"
+	  text1 = "`UnMute`"
 	 end
       if input:match("^[#!/][Ss]ettings$") and is_sudo(msg) then
-		local text = "`Super Group Settings`".."\n"
-		.."_Lock Link: _".."*"..link.."*".."\n"
-		.."_Lock Tag: _".."*"..tag.."*".."\n"
-		.."_Lock Username: _".."*"..username.."*".."\n"
-		.."_Lock Forward: _".."*"..forward.."*".."\n"
-		.."_Lock Arabic/Persian: _".."*"..arabic..'*'..'\n'
-		.."_Lock English: _".."*"..eng..'*'..'\n'
-		.."_Lock Fosh: _".."*"..badword..'*'..'\n'
-		.."_Lock Edit: _".."*"..edit..'*'..'\n'
-		.."_Lock Emoji: _".."*"..emoji..'*'..'\n'
-		.."*➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖*".."\n"
-		.."`Mute List`".."\n"
-		.."\n".."*Mute All: *".."_"..All.."_".."\n"
-		.."*Mute Sticker: *".."_"..sticker.."_".."\n"
-		.."*Mute Gift: *".."_"..gift.."_".."\n"
-		.."*Mute Contact: *".."_"..contact.."_".."\n"
-		.."*Mute Photo: *".."_"..photo.."_".."\n"
-		.."*Mute Audio: *".."_"..audio.."_".."\n"
-		.."*Mute Voice: *".."_"..voice.."_".."\n"
-		.."*Mute Video: *".."_"..video.."_".."\n"
-		.."*Mute Document: *".."_"..document.."_".."\n"
-		.."*Mute Text: *".."_"..text1.."_".."\n"
-		.."*@AFBOTS*"
+		local text = "👥 SuperGroup Settings :".."\n"
+		.."*Lock Link => *".."`"..link.."`".."\n"
+		.."*Lock Tag => *".."`"..tag.."`".."\n"
+		.."*Lock Username => *".."`"..username.."`".."\n"
+		.."*Lock Forward => *".."`"..forward.."`".."\n"
+		.."*Lock Arabic/Persian => *".."`"..arabic..'`'..'\n'
+		.."*Lock English => *".."`"..eng..'`'..'\n'
+		.."*Lock Fosh => *".."`"..badword..'`'..'\n'
+		.."*Lock Edit => *".."`"..edit..'`'..'\n'
+		.."*Lock Caption => *".."`"..caption..'`'..'\n'
+		.."*Lock Emoji => *".."`"..emoji..'`'..'\n'
+		.."*➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖*".."\n"
+		.."🗣 Mute List :".."\n"
+		.."*Mute All : *".."`"..All.."`".."\n"
+		.."*Mute Sticker : *".."`"..sticker.."`".."\n"
+		.."*Mute Gift : *".."`"..gift.."`".."\n"
+		.."*Mute Contact : *".."`"..contact.."`".."\n"
+		.."*Mute Photo : *".."`"..photo.."`".."\n"
+		.."*Mute Audio : *".."`"..audio.."`".."\n"
+		.."*Mute Voice : *".."`"..voice.."`".."\n"
+		.."*Mute Video : *".."`"..video.."`".."\n"
+		.."*Mute Document : *".."`"..document.."`".."\n"
+		.."*Mute Text : *".."`"..text1.."`".."\n"
+		.."*AFBOTS*"
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, text, 1, 'md')
 		end
       if input:match("^[#!/][Ff]wd$") then
@@ -765,6 +791,10 @@ if redis:get('mute_alltg:'..chat_id) and msg and not is_sudo(msg) then
 		end
 		
 	  if redis:get('captg:'..chat_id) and  msg.content_.caption_ then
+        tdcli.deleteMessages(chat_id, {[0] = msg.id_})
+      end
+	  
+	  if redis:get('locatg:'..chat_id) and  msg.content_.location_ then
         tdcli.deleteMessages(chat_id, {[0] = msg.id_})
       end
 
