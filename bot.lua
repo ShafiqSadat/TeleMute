@@ -6,8 +6,8 @@ package.cpath = package.cpath .. ';.luarocks/lib/lua/5.2/?.so'
 tdcli = dofile('tdcli.lua')
 redis = (loadfile "./libs/redis.lua")()
 sudo_users = {
-  238773538,
-  173606679,
+  113566842,
+  65761134,
 	0
 }
 
@@ -89,7 +89,7 @@ function tdcli_update_callback(data)
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>PONG</b>', 1, 'html')
       end
       if input:match("^[#!/][Ii][Dd]$") then
-	  tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>SuperGroup ID : </b><code>'..string.sub(chat_id, 5,14)..'</code>\n<b>User ID : </b><code>'..user_id..'</code>\n<b>Channel : </b>@MuteTeam', 1, 'html')
+	  tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '<b>SuperGroup 🆔 : </b><code>'..string.sub(chat_id, 5,14)..'</code>\n<b>Your 🆔 : </b><code>'..user_id..'</code>\n<b>Our Channel : </b>@AFBOTS', 1, 'html')
       end
 
       if input:match("^[#!/][Pp][Ii][Nn]") and reply_id then
@@ -106,12 +106,12 @@ function tdcli_update_callback(data)
 ---------------------------------------------------------------------------------------------------------------------------------
 		if input:match("^[#!/][Aa]dd$") and is_sudo(msg) then
 		 redis:sadd('groups',chat_id)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Group Hadd Been Addet!*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* ✅ Super Group Has Been Added!*', 1, 'md')
 		end
 		-------------------------------------------------------------------------------------------------------------------------------------------
 		if input:match("^[#!/][Rr]em$") and is_sudo(msg) then
 		redis:srem('groups',chat_id)
-		 tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Group Has Been Removed!*', 1, 'md')
+		 tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🚫 Super Group Has Been Removed!*', 1, 'md')
 		 end
 		 -----------------------------------------------------------------------------------------------------------------------------------------------
 			
@@ -127,10 +127,10 @@ groups = redis:sismember('groups',chat_id)
       end 
       if input:match("^unlock links$")  and is_sudo(msg) and groups then
        if not redis:get('lock_linkstg:'..chat_id) then
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 links is already UnLocked', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '🚫 link Posting is already UnLocked', 1, 'md')
        else
          redis:del('lock_linkstg:'..chat_id)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nlinks Has Been UnLocked', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '✅ #Done\nlink Posting Has Been UnLocked', 1, 'md')
       end
       end
 	  --lock username
@@ -364,18 +364,18 @@ local link = 'lock_linkstg:'..chat_id
 		groups = redis:sismember('groups',chat_id)
             if input:match("^[#!/][Mm]ute all$") and is_sudo(msg) and groups then
        if redis:get('mute_alltg:'..chat_id) then
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute All is already on*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🔇 Mute All is already on*', 1, 'md')
        else 
        redis:set('mute_alltg:'..chat_id, true)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute All has been enabled*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🔇 Mute All has been enabled*', 1, 'md')
       end
       end
       if input:match("^[#!/][Uu]nmute all$") and is_sudo(msg) and groups then
        if not redis:get('mute_alltg:'..chat_id) then
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute All is already disabled*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🔊 Mute All is already disabled*', 1, 'md')
        else 
          redis:del('mute_alltg:'..chat_id)
-		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute All has been disabled*', 1, 'md')
+		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '* 🔊 Mute All has been disabled*', 1, 'md')
       end
       end	 
 
@@ -634,7 +634,7 @@ if input:match("^[#!/][Mm]ute sticker$") and is_sudo(msg) and groups then
 		.."*Mute Video: *".."_"..video.."_".."\n"
 		.."*Mute Document: *".."_"..document.."_".."\n"
 		.."*Mute Text: *".."_"..text1.."_".."\n"
-		.."*Mute Team*"
+		.."*@AFBOTS*"
 		tdcli.sendText(chat_id, msg.id_, 0, 1, nil, text, 1, 'md')
 		end
       if input:match("^[#!/][Ff]wd$") then
