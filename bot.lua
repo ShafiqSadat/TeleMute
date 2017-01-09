@@ -726,22 +726,22 @@ end
           tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute sticker has been disabled*', 1, 'md')
         end
       end
-      --mute gif
+      --mute gift
       groups = redis:sismember('groups',chat_id)
-      if input:match("^[#!/][Mm]ute gif$") and is_mod(msg) and groups then
-        if redis:get('mute_contacttg:'..chat_id) then
-          tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute gif is already on*', 1, 'md')
+      if input:match("^[#!/][Mm]ute gift$") and is_mod(msg) and groups then
+        if redis:get('mute_gifttg:'..chat_id) then
+          tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute gift is already on*', 1, 'md')
         else
-          redis:set('mute_contacttg:'..chat_id, true)
-          tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute gif has been enabled*', 1, 'md')
+          redis:set('mute_gifttg:'..chat_id, true)
+          tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute gift has been enabled*', 1, 'md')
         end
       end
-      if input:match("^[#!/][Uu]nmute gif$") and is_mod(msg) and groups then
-        if not redis:get('mute_contacttg:'..chat_id) then
-          tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute gif is already disabled*', 1, 'md')
+      if input:match("^[#!/][Uu]nmute gift$") and is_mod(msg) and groups then
+        if not redis:get('mute_gifttg:'..chat_id) then
+          tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute gift is already disabled*', 1, 'md')
         else
-          redis:del('mute_contacttg:'..chat_id)
-          tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute gif has been disabled*', 1, 'md')
+          redis:del('mute_gifttg:'..chat_id)
+          tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute gift has been disabled*', 1, 'md')
         end
       end
       --mute contact
@@ -812,7 +812,7 @@ end
         if not redis:get('mute_voicetg:'..chat_id) then
           tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute voice is already disabled*', 1, 'md')
         else
-          redis:del('mute_videotg:'..chat_id)
+          redis:del('mute_voicetg:'..chat_id)
           tdcli.sendText(chat_id, msg.id_, 0, 1, nil, '*Mute voice has been disabled*', 1, 'md')
         end
       end
@@ -885,11 +885,11 @@ end
         sticker = "`UnMute`"
       end
 
-      local gif = 'mute_giftg:'..chat_id
-      if redis:get(gif) then
-        gif = "`Mute`"
+      local gift = 'mute_gifttg:'..chat_id
+      if redis:get(gift) then
+        gift = "`Mute`"
       else
-        gif = "`UnMute`"
+        gift = "`UnMute`"
       end
 
       local contact = 'mute_contacttg:'..chat_id
@@ -955,11 +955,11 @@ end
         .."*Lock Caption => *".."`"..caption..'`'..'\n'
         .."*Lock Inline => *".."`"..inline..'`'..'\n'
         .."*Lock Emoji => *".."`"..emoji..'`'..'\n'
-        .."*➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖*".."\n"
+        .."*➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖*".."\n"
         .."🗣 Mute List :".."\n"
         .."*Mute All : *".."`"..All.."`".."\n"
         .."*Mute Sticker : *".."`"..sticker.."`".."\n"
-        .."*Mute Gif : *".."`"..gif.."`".."\n"
+        .."*Mute Gif : *".."`"..gift.."`".."\n"
         .."*Mute Contact : *".."`"..contact.."`".."\n"
         .."*Mute Photo : *".."`"..photo.."`".."\n"
         .."*Mute Audio : *".."`"..audio.."`".."\n"
@@ -1037,7 +1037,7 @@ end
     end
 
     local input = msg.content_.text_
-    if redis:get('mute_alltg:'..chat_id) and msg and not is_owner(msg) then
+    if redis:get('mute_alltg:'..chat_id) and msg and not is_mod(msg) then
       tdcli.deleteMessages(chat_id, {[0] = msg.id_})
     end
 
@@ -1045,7 +1045,7 @@ end
       tdcli.deleteMessages(chat_id, {[0] = msg.id_})
     end
 
-    if redis:get('mute_gifg:'..chat_id) and msg.content_.animation_ and not is_mod(msg) then
+    if redis:get('mute_gifttg:'..chat_id) and msg.content_.animation_ and not is_mod(msg) then
       tdcli.deleteMessages(chat_id, {[0] = msg.id_})
     end
 
@@ -1079,13 +1079,10 @@ end
     if redis:get('forwardtg:'..chat_id) and msg.forward_info_ and not is_mod(msg) then
       tdcli.deleteMessages(chat_id, {[0] = msg.id_})
     end
-
-    if redis:get('lock_linkstg:'..chat_id) and input:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") and not is_mod(msg) then
+    local is_link_msg = input:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or input:match("[Tt].[Mm][Ee]/")
+    if redis:get('lock_linkstg:'..chat_id) and is_link_msg and not is_mod(msg) then
       tdcli.deleteMessages(chat_id, {[0] = msg.id_})
     end
-    if redis:get('lock_linkstg:'..chat_id) and input:match("[Tt].[Mm][Ee]/") and not is_mod(msg) then
-      tdcli.deleteMessages(chat_id, {[0] = msg.id_})
-    end		
 
     if redis:get('tagtg:'..chat_id) and input:match("#") and not is_mod(msg) then
       tdcli.deleteMessages(chat_id, {[0] = msg.id_})
@@ -1162,4 +1159,3 @@ end
     }, dl_cb, nil)
   end
 end
-
